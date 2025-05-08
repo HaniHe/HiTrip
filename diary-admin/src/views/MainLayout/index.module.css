@@ -1,0 +1,63 @@
+.main{
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.logoBox{
+    padding: 30px 20px 20px 10px;
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    color: #0096fc;
+    font-size: 24px;
+    font-weight: bold;
+}
+.logoBox .logo {
+    display: block;
+    margin-right: 5px;
+    width: 50px;
+    height: 50px;
+}
+
+.rightside{
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 64px;
+    background-color: #fff; 
+    padding: 5px 20px 5px 5px;
+    border-bottom: 1px solid #f0f0f0;
+}
+.menubtn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.menubtn:hover {
+    background-color: #f0f0f0;
+}
+.user {
+    font-weight: 400;
+    font-size: 14px;
+}
+.user a{
+    color:#000;
+}
+.sectionContent {
+    flex: 1;
+    padding: 10px 30px 30px 30px;
+    overflow-y: auto;
+}
+.content {
+    background-color: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: auto;
+}
