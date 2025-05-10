@@ -1,18 +1,11 @@
 import { StyleSheet, Image, View, Button } from "react-native";
-
+import TitleBar from "./components/titleBar"
+import List from "../List/waterfallList"
 export default function Home({ navigation }) {
   return (
     <View style={styles.container}>
-      <Image
-        source={require("@/assets/splash.png")}
-        style={{ width: 200, height: 200 }}
-      />
-      <View style={styles.btn}>
-        <Button
-          title="Go to User"
-          onPress={() => navigation.navigate("User")}
-        />
-      </View>
+      <TitleBar />
+      <List></List>
     </View>
   );
 }
