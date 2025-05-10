@@ -1,6 +1,7 @@
 import LoginPage from "@views/login";
 import Manage from "@views/manage";
 import Admin from "@views/admin";
+import EventPage from "@/views/event";
 import { HeartOutlined } from "@ant-design/icons";
 import React from "react";
 
@@ -21,6 +22,12 @@ const routes = [
     path: "/admin",
     component: Admin,
     label: "Admin",
+    icon: React.createElement(HeartOutlined, null),
+  },
+  {
+    path: "/event",
+    component: EventPage,
+    label: "EventPage",
     icon: React.createElement(HeartOutlined, null),
   },
 ];
