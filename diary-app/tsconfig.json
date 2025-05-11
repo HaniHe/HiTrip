@@ -7,9 +7,9 @@
     "baseUrl": ".",
     /* 配置路径别名 */
     "paths": {
-      "@/*": ["src/*"],
-      "@views/*": ["src/views/*"],
-      "@components/*": ["src/components/*"],
+      "*": [
+        "src/*"
+      ],
     }
   },
   "extends": "expo/tsconfig.base",
