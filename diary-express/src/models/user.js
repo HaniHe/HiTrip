@@ -4,7 +4,11 @@ const userSchema = new mongoose.Schema({
   userId: mongoose.Schema.Types.ObjectId,
   username: { type: String, required: true },
   password: { type: String, required: true },
-  avatar: { type: String },
+  avatar: {
+    type: String,
+    default:
+      "http://oss-cn-shu.aliyuncs.com/public/images/8ea864552b199085f746839df5e16428.png",
+  },
 });
 
 const User = mongoose.model("User", userSchema);

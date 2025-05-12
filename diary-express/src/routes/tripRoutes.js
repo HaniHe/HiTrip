@@ -30,4 +30,9 @@ router.put("/audit/reject/:id", tripController.rejectAuditTrip); // 使用PUT方
 // 获取审核状态的所有游记
 router.get("/audit/status/:status", tripController.getTripByAuditStatus); // 通过URL参数传递审核状态
 
+// 上传游记图片列表或视频
+router.post("/upload", tripController.uploadTripMedia); // 使用POST方法
+// 上传一组游记图片
+router.post("/upload/images", tripController.uploadTripMediaMultiple); // 使用POST方法
+
 module.exports = router;
