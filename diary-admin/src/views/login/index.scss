@@ -1,0 +1,91 @@
+.log {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-image: linear-gradient(to right, #4b79a1, #dee3eb);
+}
+
+.logTitle {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  padding-top: 50px;
+  color: #303133;
+  font-size: 42px;
+  font-weight: 800;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  .logo-container {
+    height: 42px;
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+    
+    .logo {
+      height: 100%;
+      width: auto;
+    }
+  }
+}
+
+.log .logContent {
+  opacity: 0.9;
+  position: relative;
+  background-color: #ffffff;
+  margin: 50px 200px;
+  display: flex;
+  box-shadow: 0 4px 8px 0 rgba(190, 195, 199, 0.5);
+  border-radius: 8px;
+}
+
+.logImg {
+  flex: 1.5;
+  // height: 55vh;
+  img {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    border-radius: 8px 0 0 8px;
+    object-fit: cover;
+  }
+}
+
+.logForm {
+  flex: 1;
+  // height: 454px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  padding: 40px; // 调整内边距，让表单内容更宽松
+  text-align: center; 
+}
+
+.formTitle {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 30px auto;
+}
+
+.formContent {
+  padding: 0 ;
+  margin-left: 0;
+}
+
+.submit {
+  margin-top: 20px;
+ .ant-btn {
+    margin-left: 0;
+    width: 50%; // 让按钮占满容器宽度
+  }
+}
+
+.ant-input {
+  width: 100%; // 让输入框占满容器宽度
+}
+
+
+
