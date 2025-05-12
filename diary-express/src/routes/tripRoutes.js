@@ -11,7 +11,7 @@ router.post("/", checkAuth, parseForm, tripController.createTrip);
 // 更新游记
 router.put("/:id", checkAuth, parseForm, tripController.updateTrip); // 使用PUT方法，并通过URL参数传递ID
 // 删除游记
-router.delete("/:id", checkAuth, tripController.deleteTrip); // 使用DELETE方法，并通过URL参数传递ID
+router.put("/audit/del/:id", checkAuth, tripController.deleteAuditTrip);
 // 获取单个游记详情
 router.get("/detail/:id", checkAuth, tripController.getTripDetail); // 通过URL参数传递ID
 // 获取所有游记
@@ -44,5 +44,10 @@ router.post(
   checkAuth,
   tripController.uploadTripMediaMultiple
 ); // 使用POST方法
+
+// 上传游记图片列表或视频
+router.post("/upload", tripController.uploadTripMedia); // 使用POST方法
+// 上传一组游记图片
+router.post("/upload/images", tripController.uploadTripMediaMultiple); // 使用POST方法
 
 module.exports = router;

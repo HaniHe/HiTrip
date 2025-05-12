@@ -5,7 +5,15 @@ import EventPage from "@/views/event";
 import { HeartOutlined } from "@ant-design/icons";
 import React from "react";
 
-const routes = [
+interface Route {
+  path: string;
+  component: React.ComponentType;
+  label: string;
+  icon: React.ReactNode;
+  isPublic?: boolean;
+}
+
+const routes: Route[] = [
   {
     path: "/",
     component: LoginPage,

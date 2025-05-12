@@ -17,4 +17,9 @@ router.post("/upload/avatar", userController.uploadAvatar);
 // 更新用户信息
 router.put("/update", userController.updateUserInfo);
 
+// 上传用户头像
+router.post("/upload/avatar", userController.uploadAvatar);
+// 更新用户信息
+router.put("/update", userController.updateUserInfo);
+
 module.exports = router;

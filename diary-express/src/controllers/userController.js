@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const { secretKey } = require("../config/secret");
-const upload = require("../utils/upload");
+const upload = require("../middlewares/upload");
 const multer = require("multer");
 
 // 配置multer，使用.parseForm()表示不处理文件上传，只处理文本字段
@@ -22,15 +22,32 @@ exports.registerUser = async (req, res) => {
       // 对密码进行加密
       const hashedPassword = await bcrypt.hash(password, 10);
       const newUser = new User({ username, password: hashedPassword });
-      await newUser.save();
+      const savedUser = await newUser.save({ new: true });
+      // 生成token
+      const payload = {
+        userId: savedUser._id,
+        userRole: "user", // 假设用户模型中包含角色信息
+      };
+      const token = jwt.sign(payload, secretKey, {
+        // 测试时设置token过期时间
+        expiresIn: "4h",
+      });
+      const userInfo = {
+        userId: savedUser._id,
+        username: savedUser.username,
+        avatar: savedUser.avatar,
+      };
       res.status(200).json({
         message: "User registered successfully",
+        userInfo,
+        token,
       });
     });
   } catch (error) {
-    res.status(500).json({ message: "Failed to register user" });
+    return res.status(500).json({ message: "Failed to register user" });
   }
 };
+
 
 exports.loginUser = async (req, res) => {
   try {
@@ -55,13 +72,18 @@ exports.loginUser = async (req, res) => {
       // 生成token
       const token = jwt.sign(payload, secretKey, {
         // 测试时设置token过期时间为2分钟
-        expiresIn: "24h",
+        expiresIn: "4h",
       });
-      res.status(200).json({ message: "Login successful", token });
+      const userInfo = {
+        userId: user._id,
+        username: user.username,
+        avatar: user.avatar,
+      };
+      res.status(200).json({ message: "Login successful", token, userInfo });
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({
+    return res.status(500).json({
       message: "Failed to login",
     });
   }
@@ -72,7 +94,7 @@ exports.logoutUser = async (req, res) => {
     // req.session.destroy();
     res.status(200).json({ message: "Logout successful" });
   } catch (error) {
-    res.status(500).json({ message: "Failed to logout" });
+    return res.status(500).json({ message: "Failed to logout" });
   }
 };
 
@@ -90,26 +112,36 @@ exports.getUserInfo = async (req, res) => {
 // 上传用户头像
 exports.uploadAvatar = async (req, res) => {
   try {
-    const userId = req.userId;
-    // 文件字段名假设为'avatar'
     upload.single("avatar")(req, res, async function (err) {
       if (err instanceof multer.MulterError) {
-        // 发生错误
+        console.error("文件上传失败multer:", err);
         return res.status(500).json({ message: err.message });
       } else if (err) {
-        // 发生未知错误
+        console.error("文件上传失败:", err);
         return res.status(500).json({ message: "文件上传失败" });
       }
-      // 上传成功，req.file 包含了文件的信息
+      const userId = req.userId;
       const file = req.file;
-      console.log(file);
-      // 将数据库中的用户头像字段更新为上传的文件url
-      await User.findByIdAndUpdate(userId, { avatar: file.url });
-
-      res.status(200).json({ url: file.url, message: "上传成功" });
+      try {
+        const updatedUser = await User.findByIdAndUpdate(
+          userId,
+          { avatar: file.url },
+          { new: true }
+        );
+        if (!updatedUser) {
+          console.log("未找到用户或更新失败");
+          return res.status(404).json({ message: "未找到用户或更新失败" });
+        }
+        console.log("数据库更新成功");
+        res.status(200).json({ url: file.url, message: "上传成功" });
+      } catch (updateError) {
+        console.error("更新用户头像时出错:", updateError);
+        return res.status(500).json({ message: "更新数据库时出错" });
+      }
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("上传头像时出错:", error);
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -126,5 +158,5 @@ exports.updateUserInfo = async (req, res) => {
   // } catch (error) {
   //   res.status(500).json({ message: "Failed to update user info" });
   // }
-  res.status(200).json({ message: "接口正在开发" });
+  return res.status(200).json({ message: "接口正在开发" });
 };
