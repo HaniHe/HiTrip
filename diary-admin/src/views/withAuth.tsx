@@ -1,10 +1,10 @@
-// withAuth.jsx
+import React from "react";
 import { Navigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
 const withAuth = (Component, requiredRole) => {
   return (props) => {
-    const userRole = Cookies.get("adminRole");
+    const userRole = Cookies.get("userRole");
 
     // 检查用户角色是否符合要求
     if (userRole !== requiredRole) {
