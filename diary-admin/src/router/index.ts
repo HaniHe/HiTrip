@@ -4,7 +4,15 @@ import Admin from "@views/admin";
 import { HeartOutlined } from "@ant-design/icons";
 import React from "react";
 
-const routes = [
+interface Route {
+  path: string;
+  component: React.ComponentType;
+  label: string;
+  icon: React.ReactNode;
+  isPublic?: boolean;
+}
+
+const routes: Route[] = [
   {
     path: "/",
     component: LoginPage,

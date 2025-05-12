@@ -8,7 +8,7 @@ router.post("/", tripController.createTrip);
 // 更新游记
 router.put("/:id", tripController.updateTrip); // 使用PUT方法，并通过URL参数传递ID
 // 删除游记
-router.delete("/:id", tripController.deleteTrip); // 使用DELETE方法，并通过URL参数传递ID
+router.put("/audit/del/:id", checkAuth, tripController.deleteAuditTrip);
 // 获取单个游记详情
 router.get("/detail/:id", tripController.getTripDetail); // 通过URL参数传递ID
 // 获取所有游记
