@@ -1,47 +1,72 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Avatar, IconButton } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 import { updateAvatar } from "@/api/user";
 import { base64ToFile } from "@/utils/upload";
-import { useAuth } from "@/auth/contexts/Auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const initUserInfo = {
   username: "Guest",
   avatar:
-  "http://oss-cn-shu.oss-cn-shanghai.aliyuncs.com/HiTrip/images/b35a2c81594bcde2ac61b2ebe4f1e281.jpg",
+    "http://tripshine.oss-cn-shanghai.aliyuncs.com/public/images/129365f628812999703915e5b81182b2.jpg",
 };
 
 const UserInfo = () => {
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
-  const fileInputRef = useRef(null);
   const [userInfo, setUserInfo] = useState(initUserInfo);
+  const [token, setToken] = useState(null);
 
   useEffect(() => {
-    // 当用户信息发生变化时，更新用户信息
-    // if (user) {
-    //   setUserInfo(user);
-    // } else {
-    const userInfo = getUserCookie();
-    setUserInfo(userInfo);
-    console.log("userInfo:", userInfo);
-    // }
-  }, [user]);
+    const loadUserInfo = async () => {
+      const _authData = await AsyncStorage.getItem("@AuthData");
+      const user = _authData ? JSON.parse(_authData) : { user: initUserInfo };
+      // console.log("user:", user);
+      setUserInfo(user.user);
+      setToken(user.token);
+    };
 
-  const handleAvatarChange = () => {
-    fileInputRef.current.click(); // 触发文件选择
-  };
+    loadUserInfo();
+  }, []);
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
+  const handleAvatarChange = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      alert("请允许访问相册权限");
+      return;
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      base64: true,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      let localUri = result.assets[0].uri;
+      // console.log("update avatar", result.assets[0]);
+      const parts = localUri.match(/^data:(.+);base64,(.+)$/);
       const formData = new FormData();
-      formData.append("avatar", file);
+      if (parts) {
+        const file = base64ToFile(localUri);
+        // console.log("webfile:", file);
+        formData.append("avatar", file);
+      } else {
+        let filename = localUri.split("/").pop();
+        let match = /\.(\w+)$/.exec(filename);
+        let type = match ? `image/${match[1]}` : `image`;
+        formData.append("avatar", { uri: localUri, name: filename, type });
+      }
       updateAvatar(formData)
-        .then((response) => {
-          dispatch(updateUser({ avatar: response.url }));
-          setUserInfo((prev) => ({ ...prev, avatar: response.url }));
+        .then(async (response) => {
+          // 更新本地存储的用户信息
+          const updatedUserInfo = { ...userInfo, avatar: response.url };
+          await AsyncStorage.setItem(
+            "@AuthData",
+            JSON.stringify({ user: updatedUserInfo, token })
+          );
+          setUserInfo(updatedUserInfo);
         })
         .catch((error) => {
           console.error("Error updating avatar:", error);
@@ -50,50 +75,67 @@ const UserInfo = () => {
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        padding: 2,
-      }}
-    >
-      <Box sx={{ position: "relative" }}>
-        <Avatar
-          // alt="User Avatar"
-          src={userInfo.avatar}
-          sx={{ width: 96, height: 96 }}
+    <View style={styles.container}>
+      <View style={styles.avatarContainer}>
+        <Avatar.Image source={{ uri: userInfo.avatar }} size={96} />
+        <IconButton
+          icon="pencil-circle"
+          size={32}
+          style={styles.iconButton}
+          color="#6200ee"
+          onPress={handleAvatarChange}
         />
-        <Button
-          sx={{
-            position: "absolute",
-            bottom: 0,
-            right: -10,
-            minWidth: "auto",
-            padding: "6px",
-            borderRadius: "50%",
-          }}
-          onClick={handleAvatarChange}
-        >
-          <AddCircleIcon sx={{ color: "primary.main" }} />
-        </Button>
-        <input
-          type="file"
-          ref={fileInputRef}
-          style={{ display: "none" }}
-          onChange={handleFileChange}
-          accept="image/*" // 只接受图片文件
-        />
-      </Box>
-      <Box sx={{ marginLeft: 2.5, flex: 1 }}>
-        <Typography variant="h6" component="div" sx={{ color: "text.primary" }}>
-          {userInfo.username}
-        </Typography>
-        <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          个人简介
-        </Typography>
-      </Box>
-    </Box>
+      </View>
+      <View style={styles.infoContainer}>
+        <Text style={styles.username}>{userInfo.username}</Text>
+        <Text style={styles.description}>个人简介</Text>
+      </View>
+    </View>
   );
 };
 
 export default UserInfo;
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingBottom: 10,
+    paddingHorizontal: 16,
+  },
+  avatarContainer: {
+    position: "relative",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  iconButton: {
+    position: "absolute",
+    right: -10,
+    bottom: 0,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: "#FFFFFF", // Assuming you want a white background for the icon
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  addButton: {
+    position: "absolute",
+    bottom: 0,
+    right: -10,
+    borderRadius: 50,
+  },
+  infoContainer: {
+    marginLeft: 20,
+    flex: 1,
+  },
+  username: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "black",
+  },
+  description: {
+    fontSize: 14,
+    color: "gray",
+  },
+});

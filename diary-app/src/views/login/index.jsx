@@ -1,99 +1,41 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "@/store/actions";
-import Cookies from "js-cookie";
-import { encrypt } from "@/utils/jsencrypt";
-import { login, register } from "@/api/user";
+import React, { useState } from "react";
+import { View, StyleSheet, Text, ActivityIndicator } from "react-native";
 import {
   Button,
   TextInput,
-  Checkbox,
-  Text,
-  ActivityIndicator,
   Card,
   Provider as PaperProvider,
 } from "react-native-paper";
-import { View, StyleSheet } from "react-native";
-import NavigationService from "@/utils/NavigationService";
-import { useNavigation } from "@react-navigation/native";
+import { Formik } from "formik";
+import * as Yup from "yup";
+
+import { useAuth } from "@/auth/contexts/Auth";
+
+const LoginSchema = Yup.object().shape({
+  username: Yup.string().required("用户名是必填项"),
+  password: Yup.string().required("密码是必填项"),
+});
 
 const Login = () => {
-  const [form, setForm] = useState({
-    username: "",
-    password: "",
-    remember: false,
-  });
+  const auth = useAuth();
   const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
-  const navigation = useNavigation();
+  const [actionType, setActionType] = useState("");
 
-  const token = useSelector((state) => state.user.token);
-
-  useEffect(() => {
-    if (token) {
-      navigation.navigate("Main");
+  const handleAction = async (values) => {
+    setLoading(true);
+    try {
+      if (actionType === "login") {
+        await auth.signIn(values);
+        console.log("Login successful");
+      } else if (actionType === "register") {
+        await auth.registerUser(values);
+        console.log("Registration successful");
+      }
+    } catch (error) {
+      console.error(`${actionType} failed:`, error);
+    } finally {
+      setLoading(false);
     }
-  }, [token]);
-
-  const handleChange = (name, value) => {
-    setForm((prevForm) => ({
-      ...prevForm,
-      [name]: value,
-    }));
-  };
-
-  const onFinish = async () => {
-    setLoading(true);
-    login(form)
-      .then((response) => {
-        dispatch(
-          setUser({
-            user: response.userInfo,
-            token: response.token,
-          })
-        );
-        if (form.remember) {
-          Cookies.set("password", encrypt(form.password), { expires: 7 });
-          Cookies.set("remember", form.remember.toString(), { expires: 7 });
-        } else {
-          Cookies.remove("password");
-          Cookies.remove("remember");
-        }
-        NavigationService.navigate("Main");
-      })
-      .catch((error) => {
-        console.error("login failed:", error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
-  const onRegister = async () => {
-    setLoading(true);
-    register(form)
-      .then((response) => {
-        dispatch(
-          setUser({
-            user: response.userInfo,
-            token: response.token,
-          })
-        );
-        if (form.remember) {
-          Cookies.set("password", encrypt(form.password), { expires: 7 });
-          Cookies.set("remember", form.remember.toString(), { expires: 7 });
-        } else {
-          Cookies.remove("password");
-          Cookies.remove("remember");
-        }
-        NavigationService.navigate("Main");
-      })
-      .catch((error) => {
-        console.error("register failed:", error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
   };
 
   return (
@@ -101,50 +43,75 @@ const Login = () => {
       <Card style={styles.card}>
         <Text style={styles.mainTitle}>TripShine</Text>
         <Text style={styles.subTitle}>Brilliant all the way</Text>
-        <TextInput
-          mode="outlined"
-          label="用户名"
-          value={form.username}
-          onChangeText={(text) => handleChange("username", text)}
-          style={styles.input}
-        />
-        <TextInput
-          mode="outlined"
-          label="密码"
-          secureTextEntry
-          value={form.password}
-          onChangeText={(text) => handleChange("password", text)}
-          style={styles.input}
-        />
-        <View style={styles.checkboxContainer}>
-          <Checkbox
-            status={form.remember ? "checked" : "unchecked"}
-            onPress={() => handleChange("remember", !form.remember)}
-          />
-          <Text>记住密码</Text>
-        </View>
-        <Button
-          mode="contained"
-          onPress={onFinish}
-          disabled={loading}
-          style={styles.button}
+        <Formik
+          initialValues={{ username: "", password: "", remember: false }}
+          validationSchema={LoginSchema}
+          onSubmit={(values) => {
+            handleAction(values);
+          }}
         >
-          {loading ? <ActivityIndicator size={24} /> : "登录"}
-        </Button>
-        <Button
-          mode="outlined"
-          onPress={onRegister}
-          disabled={loading}
-          style={styles.button}
-        >
-          {loading ? <ActivityIndicator size={24} /> : "注册"}
-        </Button>
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            errors,
+            touched,
+          }) => (
+            <>
+              <TextInput
+                mode="outlined"
+                label="用户名"
+                value={values.username}
+                onChangeText={handleChange("username")}
+                onBlur={handleBlur("username")}
+                style={styles.input}
+                error={touched.username && errors.username}
+              />
+              {touched.username && errors.username && (
+                <Text style={styles.errorText}>{errors.username}</Text>
+              )}
+              <TextInput
+                mode="outlined"
+                label="密码"
+                secureTextEntry
+                value={values.password}
+                onChangeText={handleChange("password")}
+                onBlur={handleBlur("password")}
+                style={styles.input}
+                error={touched.password && errors.password}
+              />
+              {touched.password && errors.password && (
+                <Text style={styles.errorText}>{errors.password}</Text>
+              )}
+              <Button
+                mode="contained"
+                onPress={() => {
+                  setActionType("login");
+                  handleSubmit();
+                }}
+                disabled={loading}
+                style={styles.button}
+              >
+                {loading ? <ActivityIndicator size={24} /> : "登录"}
+              </Button>
+              <Button
+                mode="outlined"
+                onPress={() => {
+                  setActionType("register");
+                  handleSubmit();
+                }}
+                disabled={loading}
+                style={styles.button}
+              >
+                {loading ? <ActivityIndicator size={24} /> : "注册"}
+              </Button>
+            </>
+          )}
+        </Formik>
       </Card>
     </PaperProvider>
   );
-};
-
-export default Login;
 };
 
 export default Login;
@@ -154,12 +121,9 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     justifyContent: "center",
-    minHeight: "100vh",
-    pb: 8,
   },
   mainTitle: {
     fontSize: 30,
-    // fontFamily: "Arial Rounded MT Bold",
     color: "#0A83F9",
     textAlign: "center",
     fontWeight: "bold",
@@ -175,12 +139,12 @@ const styles = StyleSheet.create({
   input: {
     marginBottom: 10,
   },
-  checkboxContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 10,
-  },
   button: {
     marginTop: 10,
+  },
+  errorText: {
+    color: "red",
+    fontSize: 12,
+    marginBottom: 4,
   },
 });
