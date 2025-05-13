@@ -30,7 +30,7 @@ exports.getAllTrips = async (req, res) => {
   try {
     const trips = await Trip.aggregate([
       { $match: { isDeleted: false, auditStatus: "pass" } },
-      { $sort: { likeCount: -1 } }, // 按点赞数降序排序
+      // { $sort: { likeCount: -1 } }, // 按点赞数降序排序
       {
         $addFields: {
           userIdObjectId: { $toObjectId: "$userId" },
@@ -175,12 +175,11 @@ exports.deleteTrip = async (req, res) => {
 exports.searchTrip = async (req, res) => {
   try {
     const keyword = req.query.keyword;
-    const regex = new RegExp(keyword, "i"); // 不区分大小写的搜索
+    const regex = new RegExp(keyword, "i");
 
     const trips = await Trip.aggregate([
       {
         $match: {
-          $or: [{ title: { $regex: regex } }, { username: { $regex: regex } }],
           auditStatus: "pass",
           isDeleted: false,
         },
@@ -205,6 +204,14 @@ exports.searchTrip = async (req, res) => {
         },
       },
       {
+        $match: {
+          $or: [
+            { title: { $regex: regex } },
+            { "userInfo.username": { $regex: regex } }
+          ]
+        }
+      },
+      {
         $addFields: {
           username: "$userInfo.username",
           avatar: "$userInfo.avatar",
@@ -213,7 +220,7 @@ exports.searchTrip = async (req, res) => {
       {
         $project: {
           userInfo: 0,
-          userIdObjectId: 0, // 移除辅助字段
+          userIdObjectId: 0,
         },
       },
     ]);
@@ -460,4 +467,44 @@ exports.uploadTripMediaMultiple = (req, res) => {
     const urls = files.map((file) => file.url); // multer-aliyun-oss会在成功上传后添加url属性到每个文件对象
     res.status(200).json({ urls, message: "上传成功" });
   });
+};
+
+// 点赞游记
+exports.likeTrip = async (req, res) => {
+  const { tripId } = req.params;
+  const userId = req.userId;
+  const trip = await Trip.findById(tripId);
+  if (!trip) return res.status(404).json({ message: "游记不存在" });
+  if (trip.likedUsers.includes(userId)) return res.status(400).json({ message: "您已经点赞过这篇游记" });
+  trip.likedUsers.push(userId);
+  trip.likeCount += 1;
+  await trip.save();
+  return res.status(200).json({ message: "点赞成功", data: trip });
+};
+
+// 取消点赞
+exports.unlikeTrip = async (req, res) => {
+  try {
+    const { tripId } = req.params;
+    const userId = req.userId;
+
+    const trip = await Trip.findById(tripId);
+    if (!trip) {
+      return res.status(404).json({ message: "游记不存在" });
+    }
+
+    // 检查用户是否已经点赞
+    if (!trip.likedUsers.includes(userId)) {
+      return res.status(400).json({ message: "您还没有点赞这篇游记" });
+    }
+
+    // 从点赞列表中移除用户并减少点赞数
+    trip.likedUsers = trip.likedUsers.filter(id => id !== userId);
+    trip.likeCount -= 1;
+    await trip.save();
+
+    return res.status(200).json({ message: "取消点赞成功", data: trip });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
 };

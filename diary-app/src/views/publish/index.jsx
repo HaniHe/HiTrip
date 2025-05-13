@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import UniPopup from "./components/UniPopup";
+import UniPopup from "./components/uniPopup";
 import TropForm from "@views/trip/tripFrom";
 import { useFocusEffect } from "@react-navigation/native";
 

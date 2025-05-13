@@ -109,18 +109,18 @@ export const deleteTrip = (id: string): Promise<void> => {
   });
 };
 
-// // 点赞游记
-// export const likeTrip = (tripId: string): Promise<Trip> => {
-//   return request({
-//     url: `/api/trip/${tripId}/like`,
-//     method: "post",
-//   });
-// };
+// 点赞游记
+export const likeTrip = (tripId: string): Promise<Trip> => {
+  return request({
+    url: `/api/trip/${tripId}/like`,
+    method: "post",
+  });
+};
 
-// // 取消点赞
-// export const unlikeTrip = (tripId: string): Promise<Trip> => {
-//   return request({
-//     url: `/api/trip/${tripId}/unlike`,
-//     method: "post",
-//   });
-// };
+// 取消点赞
+export const unlikeTrip = (tripId: string): Promise<Trip> => {
+  return request({
+    url: `/api/trip/${tripId}/unlike`,
+    method: "post",
+  });
+};
