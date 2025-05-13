@@ -1,7 +1,7 @@
 import axios from "axios";
 import { notification, Modal, message } from "antd";
-// import store from "@/store";
 import { getToken } from "@/utils/auth";
+import { clearUser } from "@/store/actions";
 
 export const isRelogin = { show: false };
 
@@ -10,7 +10,7 @@ axios.defaults.headers["Content-Type"] = "application/json;charset=utf-8";
 // 创建axios实例
 const service = axios.create({
   baseURL: "", // API的基础URL
-  timeout: 5000, // 请求超时时间
+  // timeout: 5000, // 请求超时时间
 });
 
 // 请求拦截器
@@ -38,12 +38,10 @@ service.interceptors.response.use(
         message: "Success",
         description: res.data.message,
       });
-      //   return Promise.reject("error");
     }
     return res.data;
   },
   (error) => {
-    console.error("err" + error);
     if (error.response.status) {
       const msg = error.response.data.message;
       switch (error.response.status) {
@@ -52,16 +50,15 @@ service.interceptors.response.use(
             return;
           }
           isRelogin.show = true;
-          // 使用Ant Design的Modal组件
           Modal.confirm({
             title: "系统提示",
             content: "登录状态已过期，您可以继续留在该页面，或者重新登录",
             okText: "重新登录",
             cancelText: "取消",
             onOk() {
-              //   store.dispatch("LogOut").then(() => {
-              //     location.href = "/";
-              //   });
+              clearUser();
+              window.location.href = "/";
+              isRelogin.show = false;
             },
             onCancel() {
               isRelogin.show = false;

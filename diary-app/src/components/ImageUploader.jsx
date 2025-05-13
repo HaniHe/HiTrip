@@ -17,6 +17,10 @@ const ImageUploader = ({ images, setImages }) => {
     });
     if (!result.canceled) {
       const imgData = result.assets[0];
+<<<<<<< HEAD
+=======
+      console.log("uploader imgData:", imgData);
+>>>>>>> origin/main
       let localUri = imgData.uri;
       const parts = localUri.match(/^data:(.+);base64,(.+)$/);
       if (parts) {
@@ -25,9 +29,17 @@ const ImageUploader = ({ images, setImages }) => {
           imgData.fileName,
           imgData.mimeType
         );
+<<<<<<< HEAD
         setImages([...images, weburl]);
       } else {
         const url = await uploadImageByUri(localUri);
+=======
+        console.log("weburl:", weburl);
+        setImages([...images, weburl]);
+      } else {
+        const url = await uploadImageByUri(localUri);
+        console.log("url:", url);
+>>>>>>> origin/main
         setImages([...images, url]);
       }
     }
@@ -46,9 +58,13 @@ const ImageUploader = ({ images, setImages }) => {
 
   return (
     <Provider>
+<<<<<<< HEAD
       <View>
         <Text style={styles.text}>点击可预览选择的图片</Text>
         <Text style={styles.text}>{images.length}/9</Text>
+=======
+      <View style={styles.wrapper}>
+>>>>>>> origin/main
         <View style={styles.imageContainer}>
           {images.map((image, index) => (
             <View key={index} style={styles.imageItem}>
@@ -68,7 +84,11 @@ const ImageUploader = ({ images, setImages }) => {
               />
             </View>
           ))}
+<<<<<<< HEAD
           {images.length < 9 && (
+=======
+          {images.length < 18 && (
+>>>>>>> origin/main
             <TouchableOpacity
               onPress={chooseImage}
               style={styles.addImageButton}
@@ -76,6 +96,12 @@ const ImageUploader = ({ images, setImages }) => {
               <Text style={styles.addImageText}>选择图片</Text>
             </TouchableOpacity>
           )}
+<<<<<<< HEAD
+=======
+          <Text style={styles.count}>
+            {images.length}/18
+          </Text>
+>>>>>>> origin/main
         </View>
         <Portal>
           <Modal
@@ -100,13 +126,22 @@ const ImageUploader = ({ images, setImages }) => {
 export default ImageUploader;
 
 const styles = StyleSheet.create({
+<<<<<<< HEAD
   text: {
     fontSize: 16,
     marginBottom: 5,
+=======
+  wrapper: {
+    position: "relative", // 用于定位数量提示
+>>>>>>> origin/main
   },
   imageContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
+<<<<<<< HEAD
+=======
+    padding: 5,
+>>>>>>> origin/main
   },
   imageItem: {
     position: "relative",
@@ -151,4 +186,14 @@ const styles = StyleSheet.create({
   closeButton: {
     marginTop: 10,
   },
+<<<<<<< HEAD
+=======
+  count: {
+    position: "absolute",
+    bottom: 5,
+    right: 10,
+    fontSize: 14,
+    color: "#666", // 灰色
+  },
+>>>>>>> origin/main
 });

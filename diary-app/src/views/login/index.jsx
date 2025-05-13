@@ -145,12 +145,17 @@ const Login = () => {
 };
 
 export default Login;
+};
+
+export default Login;
 
 const styles = StyleSheet.create({
   card: {
     flex: 1,
     padding: 20,
     justifyContent: "center",
+    minHeight: "100vh",
+    pb: 8,
   },
   mainTitle: {
     fontSize: 30,

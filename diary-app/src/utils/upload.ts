@@ -63,4 +63,8 @@ export const uploadImageByUri = async (uri: string): Promise<string> => {
     console.error(err);
     throw err;
   }
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> origin/main
