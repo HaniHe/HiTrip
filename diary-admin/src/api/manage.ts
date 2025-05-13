@@ -1,7 +1,6 @@
-// src/api/trip.ts
-import request from "@/utils/request"; 
+import request from "@/utils/request";
 
-// 定义接口返回类型
+// 定义接口返回类型（根据你的实际数据结构调整）
 interface TripListResponse {
   data: Trip[];
   total: number;
@@ -13,6 +12,11 @@ interface FetchTripsParams {
   pageSize: number;
 }
 
+interface RejectTripParams {
+  id: string;
+  reason: string;
+}
+
 // 定义旅行日记类型
 export interface Trip {
   id: string;
@@ -21,9 +25,10 @@ export interface Trip {
   username: string;
   auditStatus: string;
   createdAt: string;
+  // 其他字段...
 }
 
-// 查询旅行日记列表函数
+// 封装查询旅行日记列表的函数
 export const getTripsByStatus = (
   params: FetchTripsParams
 ): Promise<TripListResponse> => {
@@ -37,7 +42,7 @@ export const getTripsByStatus = (
   });
 };
 
-// 审核通过函数
+// 封装审核通过的函数
 export const passTrip = (id: string): Promise<unknown> => {
   return request({
     url: `/api/trip/audit/pass/${id}`,
@@ -45,10 +50,21 @@ export const passTrip = (id: string): Promise<unknown> => {
   });
 };
 
-// 拒绝游记函数
-export const rejectTrip = (id: string): Promise<unknown> => {
+// 封装拒绝的函数
+export const rejectTrip = (params: RejectTripParams): Promise<unknown> => {
   return request({
-    url: `/api/trip/audit/reject/${id}`,
+    url: `/api/trip/audit/reject/${params.id}`,
+    method: "put",
+    params: {
+      reason: params.reason,
+    },
+  });
+};
+
+// 删除旅行日记
+export const deleteTrip = (id: string): Promise<unknown> => {
+  return request({
+    url: `/api/trip/audit/del/${id}`,
     method: "put",
   });
 };

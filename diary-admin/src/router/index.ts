@@ -1,42 +1,53 @@
 import LoginPage from "@views/login";
-import Manage from "@views/manage";
-import Admin from "@views/admin";
+import DataMiner from "@views/dataMiner";
+import TripAdmin from "@views/tripAdmin";
+import UserAdmin from "@views/userAdmin";
 import EventPage from "@/views/event";
-import { HeartOutlined } from "@ant-design/icons";
-import React from "react";
+import NotFound from "@/views/error/404";
+import Unauthorized from "@/views/error/401";
+import withAuth from "@/views/withAuth";
 
-interface Route {
-  path: string;
-  component: React.ComponentType;
-  label: string;
-  icon: React.ReactNode;
-  isPublic?: boolean;
-}
+// 包装组件，指定需要的角色
+const UserAdminWithAuth = withAuth(UserAdmin, "super");
 
-const routes: Route[] = [
+const routes = [
   {
-    path: "/",
-    component: LoginPage,
-    label: "Login",
-    icon: React.createElement(HeartOutlined, null),
+    path: "/dataMiner",
+    component: DataMiner,
+    label: "DataMiner",
   },
   {
-    path: "/manage",
-    component: Manage,
-    label: "Manage",
-    icon: React.createElement(HeartOutlined, null),
+    path: "/tripAdmin",
+    component: TripAdmin,
+    label: "TripAdmin",
   },
   {
-    path: "/admin",
-    component: Admin,
-    label: "Admin",
-    icon: React.createElement(HeartOutlined, null),
+    path: "/userAdmin",
+    component: UserAdminWithAuth,
+    label: "UserAdmin",
   },
   {
     path: "/event",
     component: EventPage,
     label: "EventPage",
-    icon: React.createElement(HeartOutlined, null),
+  },
+  {
+    path: "/",
+    component: LoginPage,
+    label: "Login",
+    isPublic: true, // 添加标识符，表示该路由是否公开
+  },
+  {
+    path: "/401",
+    component: Unauthorized,
+    label: "Unauthorized",
+    isPublic: true,
+  },
+  {
+    path: "*",
+    component: NotFound,
+    label: "NotFound",
+    isPublic: true,
   },
 ];
 
