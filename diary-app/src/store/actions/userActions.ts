@@ -1,28 +1,34 @@
-// src/store/actions/userActions.ts
-
-import { SET_USER, UPDATE_USER, CLEAR_USER } from "../actionTypes/userActionTypes";
-
-// Define User interface
-interface User {
-  id?: string;
-  username?: string;
-  email?: string;
-  [key: string]: any; // for other potential user properties
-}
+import { SET_USER, UPDATE_USER, CLEAR_USER } from "../actionTypes";
+import {
+  setToken,
+  removeToken,
+  setUserCookie,
+  UpdateUserCookie,
+} from "@/utils/auth";
 
 // Action to set user information
-export const setUser = (user: User) => ({
-  type: SET_USER,
-  payload: user,
-});
+export const setUser = (userData) => {
+  setToken(userData.token);
+  setUserCookie(userData.user);
+  return {
+    type: SET_USER,
+    payload: userData,
+  };
+};
 
 // Action to update user information
-export const updateUser = (updates: Partial<User>) => ({
-  type: UPDATE_USER,
-  payload: updates,
-});
+export const updateUser = (updates) => {
+  UpdateUserCookie(updates);
+  return {
+    type: UPDATE_USER,
+    payload: updates,
+  };
+};
 
 // Action to clear user information
-export const clearUser = () => ({
-  type: CLEAR_USER,
-});
+export const clearUser = () => {
+  removeToken();
+  return {
+    type: CLEAR_USER,
+  };
+};

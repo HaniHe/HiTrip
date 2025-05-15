@@ -6,7 +6,7 @@ import TripItem from "./TripItem";
 const { width } = Dimensions.get("window");
 const COLUMN_COUNT = 2;
 
-const WaterfallList = ({ trips }) => {
+const WaterfallList = ({ trips, onRefresh  }) => {
   const [columns, setColumns] = useState(
     Array.from({ length: COLUMN_COUNT }, () => [])
   );
@@ -40,19 +40,31 @@ const WaterfallList = ({ trips }) => {
       marginRight: 5,
     },
   });
+  
 
   return (
+    // <ScrollView style={styles.container}>
+    //   <View style={styles.columnsContainer}>
+    //     {columns.map((column, index) => (
+    //       <View key={index} style={styles.column}>
+    //         {column.map((item) => (
+    //           <TripItem key={item._id} trip={item} />
+    //         ))}
+    //       </View>
+    //     ))}
+    //   </View>
+    // </ScrollView>
     <ScrollView style={styles.container}>
-      <View style={styles.columnsContainer}>
-        {columns.map((column, index) => (
-          <View key={index} style={styles.column}>
-            {column.map((item) => (
-              <TripItem key={item._id} trip={item} />
-            ))}
-          </View>
-        ))}
-      </View>
-    </ScrollView>
+    <View style={styles.columnsContainer}>
+      {columns.map((column, index) => (
+        <View key={index} style={styles.column}>
+          {column.map((item) => (
+            <TripItem key={item._id} trip={item} onRefresh={onRefresh} />
+          ))}
+        </View>
+      ))}
+    </View>
+  </ScrollView>
   );
 };
 

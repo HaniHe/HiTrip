@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal, Form, Input, notification } from "antd";
-import { rejectTrip } from "@/api/trip";
+import { rejectTrip } from "@/api/manage";
 
 const RejectTripModal = ({ tripId, visible, onClose }) => {
   const [form] = Form.useForm();

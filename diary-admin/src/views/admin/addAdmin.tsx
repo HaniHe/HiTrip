@@ -1,9 +1,10 @@
+// 结合按钮和modal组件，实现添加管理员功能
 import React, { useState } from "react";
 import { Button, Modal, Form, Input } from "antd";
 import { addAdmin } from "@/api/admin";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
-export default function AddAdmin() {
+export default function AddAdmin({ onAdd }) {
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
 
@@ -13,6 +14,11 @@ export default function AddAdmin() {
         console.log(response);
         setVisible(false);
         form.resetFields();
+        const newAdmin = {
+          ...response.userInfo,
+          _id: response.userInfo.userId,
+        };
+        onAdd(newAdmin);
       });
     } catch (error) {
       console.error("Error adding admin:", error);
@@ -22,10 +28,10 @@ export default function AddAdmin() {
   return (
     <div>
       <Button type="primary" onClick={() => setVisible(true)}>
-        添加管理员
+        添加审核人员
       </Button>
       <Modal
-        title="添加管理员"
+        title="添加审核人员"
         open={visible}
         onOk={form.submit}
         onCancel={() => setVisible(false)}

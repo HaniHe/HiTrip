@@ -1,28 +1,23 @@
-// src/store/reducers/user.ts
+import { SET_USER, UPDATE_USER, CLEAR_USER } from "../actions";
+import { getToken, getUserCookie } from "@/utils/auth";
 
-import { SET_USER, UPDATE_USER, CLEAR_USER } from "../actionTypes/userActionTypes";
-
-interface User {
-  id?: string;
-  username?: string;
-  email?: string;
-  [key: string]: any;
-}
-
-interface UserState {
-  user: User | null;
-}
-
-const initialState: UserState = {
-  user: null,
+const initialState = {
+  user: getUserCookie() || {
+    userId: "userid",
+    username: "用户名",
+    avatar:
+      "http://oss-cn-shu.oss-cn-shanghai.aliyuncs.com/HiTrip/images/b35a2c81594bcde2ac61b2ebe4f1e281.jpg",
+      
+  },
+  token: getToken(),
 };
 
-const userReducer = (state = initialState, action: { type: string; payload?: any }): UserState => {
+const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_USER:
       return {
-        ...state,
-        user: action.payload,
+        user: action.payload.user,
+        token: action.payload.token,
       };
     case UPDATE_USER:
       return {
@@ -31,8 +26,8 @@ const userReducer = (state = initialState, action: { type: string; payload?: any
       };
     case CLEAR_USER:
       return {
-        ...state,
         user: null,
+        token: "",
       };
     default:
       return state;
