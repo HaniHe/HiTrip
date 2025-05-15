@@ -60,13 +60,13 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   };
 // 用户下拉菜单项
 const USER_ITEMS: MenuProps['items'] = [
+  // {
+  //   key: '1',
+  //   label: "用户中心",
+  //   icon: <InfoCircleOutlined/>,
+  // },
   {
     key: '1',
-    label: "用户中心",
-    icon: <InfoCircleOutlined/>,
-  },
-  {
-    key: '2',
     label: (
       <span
         onClick={logout}

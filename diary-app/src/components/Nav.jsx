@@ -5,7 +5,7 @@ import { View, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Home from "@views/home/index";
 import User from "@views/user/index";
-import TripForm from "@/views/trip/tripFrom";
+import CardPublish from "@/views/publish/index";
 import TripDetail from "@/views/trip/tripDetail";
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "@/auth/contexts/Auth";
@@ -27,7 +27,7 @@ function ListStackScreen() {
           headerShown: false,
         }}
       />
-      <ListStack.Screen name="Detail" component={TripDetail} />
+      <ListStack.Screen name="Detail" component={TripDetail} options={{ title: "游记详情" }} />
     </ListStack.Navigator>
   );
 }
@@ -64,9 +64,9 @@ function TabNavigator() {
 
   return (
     <>
-      <Tab.Navigator screenOptions={{ tabBarActiveTintColor: "#0A83F9" }}>
+      <Tab.Navigator screenOptions={{ tabBarActiveTintColor: "#76aede" }}>
         <Tab.Screen
-          name="Home"
+          name="首页"
           component={ListStackScreen}
           options={{
             headerShown: false,
@@ -76,7 +76,7 @@ function TabNavigator() {
           }}
         />
         <Tab.Screen
-          name="User"
+          name="我的"
           component={UserStackScreen}
           options={{
             headerShown: false,
@@ -105,10 +105,10 @@ function AppStackScreen() {
       />
       <AppStack.Screen
         name="TripForm"
-        component={TripForm}
+        component={CardPublish}
         options={{ title: "发布游记" }}
       />
-      <AppStack.Screen name="Detail" component={TripDetail} />
+      <AppStack.Screen name="Detail" component={TripDetail} options={{ title: "游记详情" }} />
     </AppStack.Navigator>
   );
 }
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: "#0A83F9",
+    backgroundColor: "#76aede",
     justifyContent: "center",
     alignItems: "center",
     elevation: 8,

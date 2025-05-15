@@ -1,4 +1,4 @@
-import React from "react";
+// withAuth.jsx
 import { Navigate } from "react-router-dom";
 import Cookies from "js-cookie";
 

@@ -1,5 +1,5 @@
 // TravelogueCounts.js
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import UserUpdate from "./userUpdate";
 import useSSE from "@/utils/useSSE";
 
@@ -33,6 +33,7 @@ const EventPage = () => {
         console.log("Connection closed");
       },
     });
+
     // useEffect的清理函数，用于在组件卸载时执行清理操作
     return cleanup;
   }, []);

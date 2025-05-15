@@ -5,8 +5,6 @@
     "paths": {
       "@/*": ["src/*"],
       "@views/*": ["src/views/*"],
-      "@api/*": ["src/api/*"],
-      "@utils/*": ["src/utils/*"]
     },
     "target": "ES2020",
     "useDefineForClassFields": true,
@@ -20,8 +18,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
-    "jsxImportSource": "react",
+    "jsx": "react-jsxdev",
 
     /* Linting */
     "strict": true,

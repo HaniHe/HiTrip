@@ -271,9 +271,9 @@ const TripDetail = ({ route }) => {
           <View style={styles.actionButtons}>
             <TouchableOpacity style={styles.actionButton} onPress={handleLike}>
               <IconButton
-                icon={isLiked ? "heart" : "heart-outline"}
+                icon={isLiked? "heart" : "heart-outline"}
                 size={24}
-                iconColor={isLiked ? "#FF4D4F" : "#666"}
+                iconColor={isLiked? "#FF4D4F" : "#666"}
                 onPress={handleLike}
               />
               <Text style={styles.actionText}>{likeCount}</Text>
@@ -302,7 +302,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   swiperContainer: {
-    height: 250,
+    height: 200, // 可以根据需要调整
+    width: "100%",
   },
   paginationStyle: {
     bottom: 10,
@@ -324,6 +325,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     backgroundColor: "#F8F8F8",
     borderRadius: 16,
+    flexWrap: "wrap", // 允许换行
   },
   tripInfoContainerSingle: {
     justifyContent: "center", // 单个字段时居中
@@ -335,6 +337,7 @@ const styles = StyleSheet.create({
   tripInfoItemWrapper: {
     flexDirection: "row",
     alignItems: "center",
+    marginBottom: 10, // 增加间距
   },
   tripInfoItem: {
     alignItems: "center",

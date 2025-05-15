@@ -1,3 +1,4 @@
+// src/controllers/travelogueController.js
 const Trip = require("../models/trip");
 
 exports.sendTripCounts = async (req, res) => {

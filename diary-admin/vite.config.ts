@@ -4,10 +4,7 @@ import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react({
-    jsxRuntime: 'automatic',
-    jsxImportSource: 'react'
-  })],
+  plugins: [react()],
   server: {
     proxy: {
       // 使用 "/api" 作为前缀的请求会被转发到 "http://localhost:3000"

@@ -15,7 +15,7 @@ export const UserTitle = () => {
   return (
     <Appbar.Header style={{ backgroundColor: "transparent" }}>
       <Appbar.Content />
-      <Appbar.Action icon={icon_exit} color="white" onPress={logout} />
+      <Appbar.Action icon={icon_exit} onPress={logout} />
     </Appbar.Header>
   );
 };

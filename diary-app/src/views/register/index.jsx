@@ -122,18 +122,26 @@ const Register = () => {
         });
       } catch (error) {
         console.error("Registration failed:", error);
-        if (error.response) {
-          if (error.response.status === 409) {
-            setErrorMessage("用户名已存在，请更换其他用户名");
-            formik.setFieldTouched("username", true);
-            formik.setFieldError("username", "用户名已存在");
-          } else {
-            setErrorMessage(
-              error.response.data?.message || "注册失败，请稍后重试"
-            );
-          }
+        setLoading(false); // 停止加载状态
+        
+        if (error.response && error.response.status === 409) {
+          // 用户名已存在，清空表单
+          formik.resetForm({
+            values: {
+              username: '',
+              password: '',
+              confirmPassword: '',
+              avatar: values.avatar // 保留头像选择
+            }
+          });
+          
+          setErrorMessage("用户名已存在，请更换其他用户名");
+          formik.setFieldTouched("username", true);
+          formik.setFieldError("username", "用户名已存在");
         } else {
-          setErrorMessage("网络错误，请检查网络连接");
+          setErrorMessage(
+            error.response?.data?.message || "注册失败，请稍后重试"
+          );
         }
       }
     },
