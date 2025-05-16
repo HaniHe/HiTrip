@@ -7,7 +7,9 @@ exports.loginAdmin = async (req, res) => {
   const { username, password } = req.body;
 
   try {
+    // console.log("查询用户名:", username);
     const user = await Admin.findOne({ username });
+    // console.log("查询结果:", user);
     if (!user) {
       return res.status(404).json({
         message: "User not found",
@@ -18,13 +20,14 @@ exports.loginAdmin = async (req, res) => {
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid password" });
     }
+
     const payload = {
       userId: user._id,
       userRole: user.role, // 假设用户模型中包含角色信息
     };
     // 生成token
     const token = jwt.sign(payload, secretKey, {
-      expiresIn: "1h",
+      expiresIn: "24h",// 7天可能增加泄漏风险，客户端定期刷新token
     });
     const userInfo = {
       userId: user._id,
@@ -42,7 +45,6 @@ exports.loginAdmin = async (req, res) => {
 
 exports.logoutAdmin = async (req, res) => {
   try {
-    // req.session.destroy();
     res.status(200).json({ message: "Logout successful" });
   } catch (error) {
     return res.status(500).json({ message: "Failed to logout" });

@@ -65,10 +65,22 @@ export default function LoginPage() {
             expires: 7,
           });
         } else {
-          Cookies.remove("adminName");
-          Cookies.remove("adminPwd");
-          Cookies.remove("adminRemember");
-          Cookies.remove("adminRole");
+          // Cookies.remove("adminName");
+          // Cookies.remove("adminPwd");
+          // Cookies.remove("adminRemember");
+          // Cookies.remove("adminRole");
+          Cookies.set("adminName", form.getFieldValue("username"), {
+            expires: 1 / 12 //保留2h
+          });
+          Cookies.set("adminPwd", encrypt(form.getFieldValue("password")), {
+            expires: 1 / 12
+          });
+          Cookies.set("adminRemember", form.getFieldValue("remember"), {
+            expires: 1 / 12
+          });
+          Cookies.set("adminRole", response.userInfo.role, {
+            expires: 1 / 12
+          });
         }
         // 跳转到主页
         navigate("/tripAdmin");
@@ -99,7 +111,7 @@ export default function LoginPage() {
               form={form}
               name="normal_login"
               onFinish={onFinish}
-              initialValues={{ remember: true }}
+              initialValues={{ remember: false }}
               className="ruleForm"
             >
               <Form.Item

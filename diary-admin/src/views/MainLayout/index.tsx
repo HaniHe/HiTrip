@@ -32,7 +32,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const username = Cookies.get("adminName");
   const token = getToken();
   // 如果用户未登录，直接重定向到登录页面
-  if (!token) {
+  if (!token|| !username || !userRole)  {
     return <Navigate to="/" replace />;
   }
 
