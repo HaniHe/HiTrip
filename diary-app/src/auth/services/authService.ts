@@ -1,4 +1,4 @@
-import { login, register, User } from "@/api/user";
+import { login, register, User } from "../../api/user";
 
 export type AuthData = {
   token: string;

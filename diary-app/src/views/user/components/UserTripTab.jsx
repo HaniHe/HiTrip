@@ -2,8 +2,8 @@ import React, { useState, useCallback } from "react";
 import { View, Text, StyleSheet, ScrollView, Dimensions, TouchableOpacity, Image } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { ActivityIndicator } from "react-native-paper";
-import { getUserTrips } from "@/api/trip";
-import formatDate from "@/utils/formatDate";
+import { getUserTrips } from "../../../api/trip";
+import formatDate from "../../../utils/formatDate";
 
 const { width } = Dimensions.get("window");
 const COLUMN_COUNT = 2;
@@ -66,13 +66,27 @@ const UserTripTab = () => {
     }, [index])
   );
 
+  // const handleItemClick = (diary) => {
+  //   // 已通过的游记（第一个tab，index为0）跳转到详情页
+  //   if (index === 0) {
+  //     navigation.navigate("Detail", diary);
+  //   } else {
+  //     // 等待审核或被拒绝的游记跳转到编辑表单
+  //     navigation.push("TripForm", diary);
+  //   }
+  // };
   const handleItemClick = (diary) => {
-    // 已通过的游记（第一个tab，index为0）跳转到详情页
+    // console.log("点击的 Diary 对象:", diary); // 调试：检查 diary 是否包含 status
+    // 确保 diary 包含 status，优先使用 API 返回的 status
+    const diaryWithStatus = {
+      ...diary,
+      status: diary.status || statuses[index], // 如果 diary.status 存在则使用，否则用 statuses[index]
+    };
+    // console.log("传递给 TripForm 的 Diary:", diaryWithStatus); // 调试：确认 status
     if (index === 0) {
-      navigation.navigate("Detail", diary);
+      navigation.navigate("Detail", diaryWithStatus);
     } else {
-      // 等待审核或被拒绝的游记跳转到编辑表单
-      navigation.push("TripForm", diary);
+      navigation.push("TripForm", diaryWithStatus);
     }
   };
 

@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, Image, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Button, Modal, Portal, Provider } from "react-native-paper";
-import { uploadImage, uploadImageByUri } from "@/utils/upload";
+import { uploadImage, uploadImageByUri } from "../utils/upload";
 
 const ImageUploader = ({ images, setImages }) => {
   const [previewImage, setPreviewImage] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+
+   // 初始化时请求权限
+  useEffect(() => {
+    (async () => {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert("权限不足", "请在设置中开启相册访问权限！");
+      }
+    })();
+  }, []);
 
   const chooseImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({

@@ -43,17 +43,6 @@ const WaterfallList = ({ trips, onRefresh  }) => {
   
 
   return (
-    // <ScrollView style={styles.container}>
-    //   <View style={styles.columnsContainer}>
-    //     {columns.map((column, index) => (
-    //       <View key={index} style={styles.column}>
-    //         {column.map((item) => (
-    //           <TripItem key={item._id} trip={item} />
-    //         ))}
-    //       </View>
-    //     ))}
-    //   </View>
-    // </ScrollView>
     <ScrollView style={styles.container}>
     <View style={styles.columnsContainer}>
       {columns.map((column, index) => (

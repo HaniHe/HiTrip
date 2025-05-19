@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, View, RefreshControl, Image } from "react-native";
 import UserInfo from "./components/UserInfo";
 import UserTripTab from "./components/UserTripTab";
-import icon_mine_bg from "@/assets/bg_user.jpg";
+import icon_mine_bg from "../../assets/bg_user.jpg";
 import { UserTitle } from "./components/UserTitle";
 
 const User = () => {

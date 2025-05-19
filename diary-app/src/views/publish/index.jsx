@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import UniPopup from "./components/UniPopup";
-import TropForm from "@views/trip/tripFrom";
+import TropForm from "../../views/trip/tripFrom";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 const CardPublish = ({ route }) => {

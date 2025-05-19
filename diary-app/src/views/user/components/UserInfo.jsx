@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Avatar, IconButton } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
-import { updateAvatar } from "@/api/user";
-import { base64ToFile } from "@/utils/upload";
-import { useAuth } from "@/auth/contexts/Auth";
-
+import { updateAvatar } from "../../../api/user";
+import { base64ToFile } from "../../../utils/upload";
+import { useAuth } from "../../../auth/contexts/Auth";
 const initUserInfo = {
   username: "Guest",
   avatar:

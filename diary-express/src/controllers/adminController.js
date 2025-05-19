@@ -18,7 +18,7 @@ exports.loginAdmin = async (req, res) => {
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(401).json({ message: "Invalid password" });
+      return res.status(401).json({ message: "Invalid password" }); // 因为状态码是401，因此前端就算密码错误也会给出提示登录状态过期
     }
 
     const payload = {
@@ -27,7 +27,7 @@ exports.loginAdmin = async (req, res) => {
     };
     // 生成token
     const token = jwt.sign(payload, secretKey, {
-      expiresIn: "24h",// 7天可能增加泄漏风险，客户端定期刷新token
+      expiresIn: "3d",
     });
     const userInfo = {
       userId: user._id,

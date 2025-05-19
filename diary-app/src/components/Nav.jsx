@@ -3,12 +3,12 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import Home from "@views/home/index";
-import User from "@views/user/index";
-import CardPublish from "@/views/publish/index";
-import TripDetail from "@/views/trip/tripDetail";
+import Home from "../views/home/index";
+import User from "../views/user/index";
+import CardPublish from "../views/publish/index";
+import TripDetail from "../views/trip/tripDetail";
 import { useNavigation } from "@react-navigation/native";
-import { useAuth } from "@/auth/contexts/Auth";
+import { useAuth } from "../auth/contexts/Auth";
 
 const Tab = createBottomTabNavigator();
 const ListStack = createNativeStackNavigator();

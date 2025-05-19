@@ -55,9 +55,9 @@ service.interceptors.response.use(
             content: "登录状态已过期，您可以继续留在该页面，或者重新登录",
             okText: "重新登录",
             cancelText: "取消",
-            onOk() {
-              clearUser();
-              window.location.href = "/";
+            onOk() { 
+              clearUser(); // 清空 Redux 中存储的用户信息
+              window.location.href = "/"; // 重定向到登录页面
               isRelogin.show = false;
             },
             onCancel() {

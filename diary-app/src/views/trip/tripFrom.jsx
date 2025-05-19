@@ -19,8 +19,8 @@ import {
 } from "react-native-paper";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { createTrip, updateTrip, deleteTrip } from "@/api/trip";
-import ImageUploader from "@/components/ImageUploader";
+import { createTrip, updateTrip, deleteTrip } from "../../api/trip";
+import ImageUploader from "../../components/ImageUploader";
 import { useNavigation } from "@react-navigation/native";
 
 const validationSchema = yup.object({
@@ -52,14 +52,24 @@ const TripForm = ({ route }) => {
       travelMonth: route.params?.travelMonth || null,
       cost: route.params?.cost || 0,
       days: route.params?.days || 0,
+      // 新增：初始化 status 字段
+      auditStatus: route.params?.status || "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       const action = isEdit ? updateTrip : createTrip; //根据isEdit的值判断是创建还是更新
-      if (isEdit) {
-        values._id = route.params._id;
-      }
-      action(values)
+      // 新增：如果编辑被拒绝的游记，将状态设为 "wait"
+      const submissionValues = {
+        ...values,
+        _id: isEdit ? route.params._id : undefined,
+        // 如果当前状态为 "reject"，更新为 "wait"
+        auditStatus: isEdit && values.auditStatus === "reject" ? "wait" : values.auditStatus,
+      };
+      // if (isEdit) {
+      //   values._id = route.params._id;
+      // }
+      // console.log("提交的表单值:", submissionValues); // 调试：检查提交时的 status
+      action(submissionValues)
         .then(() => {
           formik.resetForm();
           navigation.goBack(); // 成功后重置表单并返回上一页
@@ -86,7 +96,7 @@ const TripForm = ({ route }) => {
       formik.values.content.trim() !== "" &&
       formik.values.images.length > 0;
     setIsFormChanged(isRequiredFieldsFilled);
-    console.log('当前表单值:', formik.values);
+    // console.log('当前表单值:', formik.values);
   }, [formik.values]);
 
   const [visible, setVisible] = useState(false);

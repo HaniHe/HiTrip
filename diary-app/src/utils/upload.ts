@@ -1,4 +1,4 @@
-import { upload } from "@/api/upload";
+import { upload } from "../api/upload";
 
 export const base64ToFile = (
   base64: string,

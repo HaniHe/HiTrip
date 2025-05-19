@@ -1,9 +1,8 @@
-// Home.js
 import React, { useState, useEffect, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { View, StyleSheet } from "react-native";
 import WaterfallList from "./components/WaterfallList";
-import { getAllPassTrips, searchTrips } from "@/api/trip";
+import { getAllPassTrips, searchTrips } from "../../api/trip";
 import {
   Dialog,
   Portal,

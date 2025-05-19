@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Card, useTheme, IconButton } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-import formatDate from "@/utils/formatDate";
+import formatDate from "../../../utils/formatDate";
 import { View } from "react-native";
-import { likeTrip, unlikeTrip } from "@/api/trip";
-import { useAuth } from "@/auth/contexts/Auth";
+import { likeTrip, unlikeTrip } from "../../../api/trip";
+import { useAuth } from "../../../auth/contexts/Auth";
 
 const TripItem = ({ trip, onRefresh }) => {
   const navigation = useNavigation();
@@ -48,8 +48,8 @@ const TripItem = ({ trip, onRefresh }) => {
   const onPress = () => {
     navigation.push("Detail", {
       ...trip,
-       likeCount: likeCount,
-       likedUsers: trip.likedUsers
+      likeCount: likeCount,
+      likedUsers: trip.likedUsers
      });
    };
   

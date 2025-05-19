@@ -9,7 +9,7 @@ import {
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useNavigation } from "@react-navigation/native";
-import { useAuth } from "@/auth/contexts/Auth";
+import { useAuth } from "../../auth/contexts/Auth";
 
 const LoginSchema = Yup.object().shape({
   username: Yup.string().required("用户名是必填项"),
@@ -115,7 +115,7 @@ const Login = ({ route }) => {
                   disabled={loading}
                   style={styles.button}
                 >
-                  {loading && actionType === "login" ? <ActivityIndicator size={24} /> : "登录"}
+                  {loading && actionType === "login" ? <ActivityIndicator size={24}/> : "登录"}
                 </Button>
                 <Button
                   mode="outlined"

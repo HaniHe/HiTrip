@@ -11,10 +11,10 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Swiper from "react-native-swiper";
-import icon_share from "@/assets/icon/icon_share.png";
+import icon_share from "../../assets/icon/icon_share.png";
 import { IconButton } from "react-native-paper";
-import { likeTrip, unlikeTrip } from "@/api/trip";
-import { useAuth } from "@/auth/contexts/Auth";
+import { likeTrip, unlikeTrip } from "../../api/trip";
+import { useAuth } from "../../auth/contexts/Auth";
 
 const TripDetail = ({ route }) => {
   const navigation = useNavigation();
@@ -261,7 +261,6 @@ const TripDetail = ({ route }) => {
         <View style={styles.footer}>
           <View style={styles.authorInfo}>
             <Image source={{ uri: avatar }} style={styles.avatar} />
-            {/* <Text style={styles.authorName}>{username}</Text> */}
             <View style={styles.authorTextContainer}>
               <Text style={styles.authorName}>{username}</Text>
               <Text style={styles.createdAt}>{createTime.slice(0, 10)}</Text>

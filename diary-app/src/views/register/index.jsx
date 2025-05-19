@@ -19,8 +19,8 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
-import { base64ToFile } from "@/utils/upload";
-import { updateAvatar, register } from "@/api/user";
+import { base64ToFile } from "../../utils/upload";
+import { updateAvatar, register } from "../../api/user";
 import Toast from "react-native-toast-message";
 
 const theme = {

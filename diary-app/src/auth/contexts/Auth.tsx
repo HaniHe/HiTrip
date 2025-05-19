@@ -19,7 +19,7 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 type AuthProviderProps = {
   children: ReactNode;
 };
-
+//创建一个AuthProvider组件来管理认证状态,并在APP.js(应用的根组件)
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [authData, setAuthData] = useState<AuthData>();
 

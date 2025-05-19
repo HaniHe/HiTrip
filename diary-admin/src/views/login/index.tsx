@@ -53,16 +53,16 @@ export default function LoginPage() {
         dispatch(setUser(payload));
         if (form.getFieldValue("remember")) {
           Cookies.set("adminName", form.getFieldValue("username"), {
-            expires: 7,
+            expires: 3, //cookie存储和token有效期都为3天
           });
           Cookies.set("adminPwd", encrypt(form.getFieldValue("password")), {
-            expires: 7,
+            expires: 3,
           });
           Cookies.set("adminRemember", form.getFieldValue("remember"), {
-            expires: 7,
+            expires: 3,
           });
           Cookies.set("adminRole", response.userInfo.role, {
-            expires: 7,
+            expires: 3,
           });
         } else {
           // Cookies.remove("adminName");

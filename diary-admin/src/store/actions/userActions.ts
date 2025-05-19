@@ -6,7 +6,7 @@ import { setToken, removeToken, removeUser } from "@/utils/auth";
 // Action to set user information
 export const setUser = (userData) => {
   // setToken
-  setToken(userData.token);
+  setToken(userData.token); //将token存储到cookie中
   return {
     type: SET_USER,
     payload: userData,

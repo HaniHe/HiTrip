@@ -1,4 +1,4 @@
-import request from "@/utils/request";
+import request from "../utils/request";
 interface TripListResponse {
   data: Trip[];
   total: number;
@@ -93,6 +93,7 @@ export const updateTrip = (params: {
   travelMonth: string | null;
   cost: number;
   days: number;
+  auditStatus: string;
 }): Promise<Trip> => {
   return request({
     url: `/api/trip/${params._id}`,
