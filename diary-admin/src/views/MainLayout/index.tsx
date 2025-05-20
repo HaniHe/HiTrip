@@ -32,7 +32,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const username = Cookies.get("adminName");
   const token = getToken();
   // 如果用户未登录，直接重定向到登录页面
-  if (!token|| !username || !userRole)  {
+  if (!token || !username || !userRole) {
     return <Navigate to="/" replace />;
   }
 
@@ -58,25 +58,25 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       },
     });
   };
-// 用户下拉菜单项
-const USER_ITEMS: MenuProps['items'] = [
-  // {
-  //   key: '1',
-  //   label: "用户中心",
-  //   icon: <InfoCircleOutlined/>,
-  // },
-  {
-    key: '1',
-    label: (
-      <span
-        onClick={logout}
-      >
-        退出
-      </span>
-    ),
-    icon: <CloseCircleOutlined />,
-  }
-];
+  // 用户下拉菜单项
+  const USER_ITEMS: MenuProps['items'] = [
+    // {
+    //   key: '1',
+    //   label: "用户中心",
+    //   icon: <InfoCircleOutlined/>,
+    // },
+    {
+      key: '1',
+      label: (
+        <span
+          onClick={logout}
+        >
+          退出
+        </span>
+      ),
+      icon: <CloseCircleOutlined />,
+    }
+  ];
 
   return (
     <Layout className={styles.main}>
@@ -88,16 +88,23 @@ const USER_ITEMS: MenuProps['items'] = [
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={["tripAdmin"]}
+          defaultSelectedKeys={["home"]}
+          onClick={({ key }) => {
+            const item = menuItems.find(m => m.key === key);
+            if (item) {
+              const label = typeof item.label === 'string' ? item.label : item.label.props.children;
+              setSelectedMenu([label]);
+            }
+          }}
           items={filteredMenuItems.map((item) => ({
             key: item.key,
             icon: item.icon,
             label: item.label,
           }))}
-          style={{ height: '100%', borderRight: 0}}
+          style={{ height: '100%', borderRight: 0 }}
         />
       </Sider>
-      <Layout className= {styles.rightside}>
+      <Layout className={styles.rightside}>
         <Header className={styles.header}>
           <Button
             type="text"
@@ -106,27 +113,27 @@ const USER_ITEMS: MenuProps['items'] = [
             className={styles.menubtn}
           />
           <span className={styles.user}>
-              <Dropdown menu={{ items: USER_ITEMS }}>
-                  <a onClick={(e) => e.preventDefault()}> 
-                    <Space>
-                      {username}
-                      <DownCircleOutlined />
-                    </Space>
-                  </a>
-              </Dropdown>
-            </span>
+            <Dropdown menu={{ items: USER_ITEMS }}>
+              <a onClick={(e) => e.preventDefault()}>
+                <Space>
+                  {username}
+                  <DownCircleOutlined />
+                </Space>
+              </a>
+            </Dropdown>
+          </span>
         </Header>
         <Layout className={styles.sectionContent}>
           <Breadcrumb style={{ margin: '10px 15px' }}>
-            {/* <Breadcrumb.Item>首页</Breadcrumb.Item> */}
+            <Breadcrumb.Item>首页</Breadcrumb.Item>
             {selectedMenu.map((item, index) => (
               <Breadcrumb.Item key={index}>{item}</Breadcrumb.Item>
             ))}
           </Breadcrumb>
           <Content className={styles.content}>{children}</Content>
         </Layout>
-        </Layout>
       </Layout>
+    </Layout>
   );
 };
 

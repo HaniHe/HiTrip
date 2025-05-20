@@ -62,7 +62,7 @@ const UserTable = () => {
     // 重置之前先确认
     Modal.confirm({
       title: `确认重置管理员 ${user.username} 的密码`,
-      content: "重置后密码将改为adminadmin，确认重置吗？",
+      content: "重置后密码将改为000000，确认重置吗？",
       onOk: () => {
         resetPassword(user._id)
           .then(() => {

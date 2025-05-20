@@ -68,3 +68,11 @@ export const deleteTrip = (id: string): Promise<unknown> => {
     method: "put",
   });
 };
+
+// 获取全部游记
+export const getAllTrips = (): Promise<TripListResponse> => {
+  return request({
+    url: `/api/trip/list`,
+    method: "get",
+  });
+};

@@ -1,20 +1,19 @@
 import LoginPage from "@views/login";
-import DataMiner from "@views/dataMiner";
 import TripAdmin from "@/views/manage";
 import UserAdmin from "@/views/admin";
-import EventPage from "@/views/event";
 import NotFound from "@/views/error/404";
 import Unauthorized from "@/views/error/401";
 import withAuth from "@/views/withAuth";
+import HomePage from "@/views/home";
 
 // 包装组件，指定需要的角色
 const UserAdminWithAuth = withAuth(UserAdmin, "super");
 
 const routes = [
   {
-    path: "/dataMiner",
-    component: DataMiner,
-    label: "DataMiner",
+    path: "/home",
+    component: HomePage,
+    label: "HomePage",
   },
   {
     path: "/tripAdmin",
@@ -25,11 +24,6 @@ const routes = [
     path: "/userAdmin",
     component: UserAdminWithAuth,
     label: "UserAdmin",
-  },
-  {
-    path: "/event",
-    component: EventPage,
-    label: "EventPage",
   },
   {
     path: "/",

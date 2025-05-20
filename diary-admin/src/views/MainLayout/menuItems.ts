@@ -1,5 +1,5 @@
 // menuItems.js
-import { HddFilled, HighlightFilled } from "@ant-design/icons";
+import { HddFilled, HighlightFilled, HomeFilled } from "@ant-design/icons";
 import React from "react";
 
 interface MenuItem {
@@ -11,13 +11,13 @@ interface MenuItem {
 }
 
 const menuItems: MenuItem[] = [
-  // {
-  //   key: "dataMiner",
-  //   path: "/dataMiner",
-  //   label: "Data Miner",
-  //   icon: React.createElement(HeartOutlined),
-  //   roles: ["common", "super"],
-  // },
+  {
+    key: "home",
+    path: "/home",
+    label: "首页",
+    icon: React.createElement(HomeFilled),  
+    roles: ["common", "super"],
+  },
   {
     key: "tripAdmin",
     path: "/tripAdmin",
@@ -31,14 +31,7 @@ const menuItems: MenuItem[] = [
     label: "审核人员管理",
     icon: React.createElement(HddFilled),
     roles: ["super"], // 仅'super'角色可以访问
-  },
-  // {
-  //   key: "event",
-  //   path: "/event",
-  //   label: "Event",
-  //   icon: React.createElement(HeartOutlined),
-  //   roles: ["common", "super"],
-  // },
+  }
 ];
 
 export default menuItems;

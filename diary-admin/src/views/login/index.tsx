@@ -22,7 +22,7 @@ export default function LoginPage() {
   useEffect(() => {
     // 如果已经登录，直接跳转到主页
     if (getToken()) {
-      navigate("/tripAdmin");
+      navigate("/home");
     }
     getCookie();
   });
@@ -83,7 +83,7 @@ export default function LoginPage() {
           });
         }
         // 跳转到主页
-        navigate("/tripAdmin");
+        navigate("/home");
       })
       .catch((error) => {
         console.error("login failed:", error);

@@ -18,7 +18,7 @@ exports.loginAdmin = async (req, res) => {
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(401).json({ message: "Invalid password" }); // 因为状态码是401，因此前端就算密码错误也会给出提示登录状态过期
+      return res.status(400).json({ message: "Invalid password" }); 
     }
 
     const payload = {
@@ -98,9 +98,9 @@ exports.createUser = async (req, res) => {
     return res.status(403).json({ message: "Unauthorized" });
   }
   const { username, password } = req.body;
-  //   如果没有传入密码，则默认密码为adminadmin
+  //   如果没有传入密码，则默认密码为000000
   if (!password) {
-    password = "adminadmin";
+    password = "000000";
   }
 
   try {
@@ -127,7 +127,7 @@ exports.resetPassword = async (req, res) => {
   if (userRole !== "super") {
     return res.status(403).json({ message: "Unauthorized" });
   }
-  password = "adminadmin";
+  password = "000000";
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     await Admin.findByIdAndUpdate(req.params.id, { password: hashedPassword });
