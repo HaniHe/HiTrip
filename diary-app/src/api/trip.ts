@@ -75,6 +75,7 @@ export const createTrip = (params: {
   travelMonth: string | null;
   cost: number;
   days: number;
+  auditStatus: string;
 }): Promise<Trip> => {
   return request({
     url: "/api/trip/",

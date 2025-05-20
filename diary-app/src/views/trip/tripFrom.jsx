@@ -63,7 +63,7 @@ const TripForm = ({ route }) => {
         ...values,
         _id: isEdit ? route.params._id : undefined,
         // 如果当前状态为 "reject"，更新为 "wait"
-        auditStatus: isEdit && values.auditStatus === "reject" ? "wait" : values.auditStatus,
+        auditStatus: isEdit && values.auditStatus === "reject" ? "wait" : (isEdit ? values.auditStatus : "wait"),
       };
       // if (isEdit) {
       //   values._id = route.params._id;

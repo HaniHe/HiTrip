@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   ScrollView,
   SafeAreaView,
+  Modal,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Swiper from "react-native-swiper";
@@ -15,6 +16,7 @@ import icon_share from "../../assets/icon/icon_share.png";
 import { IconButton } from "react-native-paper";
 import { likeTrip, unlikeTrip } from "../../api/trip";
 import { useAuth } from "../../auth/contexts/Auth";
+import ImageViewer from 'react-native-image-zoom-viewer';
 
 const TripDetail = ({ route }) => {
   const navigation = useNavigation();
@@ -43,6 +45,8 @@ const TripDetail = ({ route }) => {
   const [likeCount, setLikeCount] = useState(initialLikeCount || 0);
   const [likedUsers, setLikedUsers] = useState(initialLikedUsers || []);
   const [dataChanged, setDataChanged] = useState(false);
+  const [isImageModalVisible, setIsImageModalVisible] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   // 初始化点赞状态
   useEffect(() => {
@@ -119,7 +123,7 @@ const TripDetail = ({ route }) => {
       setIsLiked(!isLiked);
       setDataChanged(true);
 
-      // 创建完整的更新数据对象
+      // 更新数据对象
       const updatedTripData = {
         _id,
         likeCount: newLikeCount,
@@ -149,20 +153,10 @@ const TripDetail = ({ route }) => {
       global.updatedTripData = updatedTripData;
 
       // 3. 尝试使用父导航设置参数
-      try {
-        const parent = navigation.getParent();
-        if (parent) {
-          //console.log("设置父导航参数");
-          parent.setParams({
-            updatedTrip: updatedTripData
-          });
-        }
-      } catch (error) {
-        //console.error("设置父导航参数失败:", error);
-      }
-
-      //console.log("详情页点赞处理完成，新的点赞数:", newLikeCount);
-
+      const parent = navigation.getParent();
+      parent.setParams({
+        updatedTrip: updatedTripData
+      });
     } catch (error) {
       //console.error("点赞操作失败:", error);
     }
@@ -197,7 +191,7 @@ const TripDetail = ({ route }) => {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.mainContainer}>
         <ScrollView style={styles.scrollContainer}>
-          {/* 图片轮播区 - 保持原始代码 */}
+          {/* 图片轮播区 */}
           <View style={styles.swiperContainer}>
             <Swiper
               loop={true}
@@ -210,15 +204,42 @@ const TripDetail = ({ route }) => {
               onIndexChanged={onIndexChanged}
             >
               {images.map((image, index) => (
-                <View key={index} style={{ flex: 1, justifyContent: "center" }}>
+                <TouchableOpacity
+                  key={index}
+                  style={{ flex: 1, justifyContent: "center" }}
+                  onPress={() => {
+                    setSelectedImageIndex(index);
+                    setIsImageModalVisible(true);
+                  }}
+                >
                   <Image
                     source={{ uri: image }}
                     style={{ width: "100%", height: "100%" }}
+                    onLoad={() => handleImageLoad(index)}
                   />
-                </View>
+                </TouchableOpacity>
               ))}
             </Swiper>
           </View>
+
+          {/* 图片放大模态框 */}
+          <Modal
+            visible={isImageModalVisible}
+            transparent={true}
+            animationType="fade"
+            onRequestClose={() => setIsImageModalVisible(false)}
+          >
+            <ImageViewer
+              imageUrls={images.map((image) => ({ url: image }))}
+              index={selectedImageIndex} 
+              onChange={(index) => setSelectedImageIndex(index)}
+              onClick={() => setIsImageModalVisible(false)}
+              enableSwipeDown // 支持下拉关闭
+              onSwipeDown={() => setIsImageModalVisible(false)} 
+              saveToLocalByLongPress={false} 
+              backgroundColor="rgba(0, 0, 0, 0.9)" 
+            />
+          </Modal>
 
           {/* 标题 */}
           <Text style={styles.title}>{title}</Text>
@@ -270,9 +291,9 @@ const TripDetail = ({ route }) => {
           <View style={styles.actionButtons}>
             <TouchableOpacity style={styles.actionButton} onPress={handleLike}>
               <IconButton
-                icon={isLiked? "heart" : "heart-outline"}
+                icon={isLiked ? "heart" : "heart-outline"}
                 size={24}
-                iconColor={isLiked? "#FF4D4F" : "#666"}
+                iconColor={isLiked ? "#FF4D4F" : "#666"}
                 onPress={handleLike}
               />
               <Text style={styles.actionText}>{likeCount}</Text>
@@ -301,7 +322,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   swiperContainer: {
-    height: 200, // 可以根据需要调整
+    height: 200,
     width: "100%",
   },
   paginationStyle: {

@@ -15,6 +15,7 @@ exports.createTrip = async (req, res) => {
       userId: userId,
       likeCount: 0,
       likedUsers: [],
+      auditStatus: req.body.auditStatus || "wait",
     };
     const newTrip = new Trip(tripData);
     // 获取保存之后的新游记对象
