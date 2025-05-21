@@ -1,7 +1,7 @@
 // MainLayout.tsx
 import React, { ReactNode, useState, useEffect } from "react";
 import { getToken } from "@/utils/auth";
-import { useNavigate, Link, Navigate } from "react-router-dom";
+import { useNavigate, Link, Navigate, useLocation, useMatch } from "react-router-dom";
 import { Layout, Menu, Button, Modal, Dropdown, Space, MenuProps, Breadcrumb } from "antd";
 import {
   MenuFoldOutlined,
@@ -26,11 +26,23 @@ interface MainLayoutProps {
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState<string[]>([]);
   const userRole = Cookies.get("adminRole") || "admin";
   const username = Cookies.get("adminName");
   const token = getToken();
+
+  // 根据当前路径自动设置选中的菜单项
+  useEffect(() => {
+    const currentPath = location.pathname;
+    const item = menuItems.find(m => m.path === currentPath);
+    if (item) {
+      const label = typeof item.label === 'string' ? item.label : item.label.props.children;
+      setSelectedMenu([label]);
+    }
+  }, [location.pathname]);
+
   // 如果用户未登录，直接重定向到登录页面
   if (!token || !username || !userRole) {
     return <Navigate to="/" replace />;
@@ -88,18 +100,12 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={["home"]}
-          onClick={({ key }) => {
-            const item = menuItems.find(m => m.key === key);
-            if (item) {
-              const label = typeof item.label === 'string' ? item.label : item.label.props.children;
-              setSelectedMenu([label]);
-            }
-          }}
+          defaultSelectedKeys={[window.location.pathname.substring(1)]}
           items={filteredMenuItems.map((item) => ({
             key: item.key,
             icon: item.icon,
             label: item.label,
+            selected: useMatch(item.path) !== null, // 根据路由匹配状态设置选中
           }))}
           style={{ height: '100%', borderRight: 0 }}
         />
